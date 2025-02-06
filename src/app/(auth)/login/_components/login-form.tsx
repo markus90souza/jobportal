@@ -11,6 +11,9 @@ import * as React from "react";
 import type { SVGProps } from "react";
 
 import { Button } from "@/components/ui/button";
+import { auth, signIn } from "@/utils/auth";
+import { SubmitButton } from "@/components/shared/submit-button";
+import { redirect } from "next/navigation";
 
 const Github = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -55,7 +58,14 @@ const Google = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export function LoginForm() {
+const LoginForm = async () => {
+
+  const session = await auth();
+
+  if(session?.user) {
+    return redirect('/')  
+  }
+  
   return (
     <div className="flex flex-col gap-6">
       <Card>
@@ -68,18 +78,17 @@ export function LoginForm() {
         <CardContent>
           <div className="grid gap-6">
             <div className="flex flex-col gap-4">
-              <form>
-                <Button variant={'outline'} className="w-full">
-                  <Github className="size-4" /> 
-                  Entrar com Github
-                </Button>
+              <form action={ async () => {
+                "use server";
+                await signIn('github', {
+                  redirectTo: '/'
+                })
+              }}>
+              <SubmitButton title="Entrar com Github" icon={<Github />} />
               
               </form>
               <form>
-              <Button variant={'outline'} className="w-full">
-                  <Google className="size-4" />
-                  Entrar com Google
-                </Button>
+              <SubmitButton title="Entrar com Google" icon={<Google />} />
               </form>
             </div>
           </div>
@@ -92,3 +101,5 @@ export function LoginForm() {
     </div>
   );
 }
+
+export { LoginForm }
