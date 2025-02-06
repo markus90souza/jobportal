@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { type FC } from 'react'
-import { Button } from '../ui/button'
-import { ThemeToggle } from '../theme-toggle'
+import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 const Navbar: FC = () => {
   return (
